@@ -16,4 +16,6 @@ CREATE TABLE IF NOT EXISTS admin (
         password VARCHAR(255) NOT NULL,
         PRIMARY KEY (username)
     );
+INSERT INTO employee_register (f_name, l_name, email, contact, dob, join_date, gender)
+VALUES ('gh', 'bg', 'gh@example.com', 1234567890, '1990-01-01', '2023-01-01', 'M');
 INSERT INTO admin (username, password) VALUES ('gh', '123');

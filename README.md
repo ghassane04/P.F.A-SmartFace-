@@ -32,8 +32,10 @@ PRIMARY KEY ( username )
 );
 
 
-4. Insert default value into the "admin" table
+4. Insert default value into the "admin" table and also the "employee_register"
 In this case, we are setting a user id and password for the admin of the system. You need to choose this credential as per your choice here.
 
+INSERT INTO employee_register (f_name, l_name, email, contact, dob, join_date, gender)
+VALUES ('gh', 'bg', 'gh@example.com', 1234567890, '1990-01-01', '2023-01-01', 'M');
 INSERT INTO admin (username,password) VALUES ('your_username','your_password');
 

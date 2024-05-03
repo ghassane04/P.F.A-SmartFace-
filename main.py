@@ -154,9 +154,17 @@ class LoginSystem:
             face_locations = f.face_locations(frame)
             unknown_face_encodings = f.face_encodings(frame, face_locations)
 
+            if not unknown_face_encodings:
+                continue
+
             for (top, right, bottom, left), face_encoding in zip(face_locations, unknown_face_encodings):
                 matches = f.compare_faces(encoded_faces, face_encoding)
                 face_distances = f.face_distance(encoded_faces, face_encoding)
+
+                # Check if there are any distances in the array
+                if face_distances.size == 0:
+                    continue
+
                 best_match_index = np.argmin(face_distances)
 
                 if matches[best_match_index]:
@@ -185,7 +193,6 @@ class LoginSystem:
         else:
             messagebox.showerror("Login Failed", "No recognized employee found or employee is not in the system.")
 
-    # A Function to check if the user id of the detected face is matching
     # with the database or not. If yes, the function returns the value True.
     def isPresent(self, UID):
         try:
@@ -224,6 +231,20 @@ class LoginSystem:
         # Write to a file or update the database
         with open("employee_times.log", "a") as file:
             file.write(f"{employee_id},{event_type},{timestamp}\n")
+
+    def logoutEmployeeWrapper(self):
+        if self.current_employee_id:
+            self.logoutEmployee()  # Corrected line
+            messagebox.showinfo("Logout Successful", "You have been logged out.")
+        else:
+            messagebox.showerror("Logout Failed", "No employee is currently logged in.")
+
+    def check_log_file(self):
+        try:
+            with open("employee_times.log", "a+") as file:
+                pass  # Just to create the file if it doesn't exist
+        except Exception as e:
+            print(f"Failed to check/create log file: {str(e)}")
 
     def logoutEmployeeWrapper(self):
         if self.current_employee_id:
@@ -282,11 +303,9 @@ class LoginSystem:
         if recognized_employee_id:
             # If recognized, log the employee out by calling employeeQuit
             self.employeeQuit(recognized_employee_id)
-            self.current_employee_id = None  # Reset the current_employee_id
         else:
             messagebox.showerror("Logout Failed", "No recognized employee found or employee is not in the system.")
 
-    # A Function for login into the system for the Admin
     def loginAdmin(self):
         if self.userName.get() == "" or self.password.get() == "":
             messagebox.showerror("Error", "Please fill all fields.")
